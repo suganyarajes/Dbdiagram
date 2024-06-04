@@ -1,73 +1,90 @@
-#Guvi Zen Class Database Model
-This repository contains the database model for the Guvi Zen class, designed using DBML (Database Markup Language). The schema includes tables for students, class sessions, and tasks, with defined relationships and constraints to ensure data integrity and efficient management.
+# Guvi Zen Class Database Model
 
-#Project Overview
-The Guvi Zen Class database is structured to manage information related to students, their classes, and the tasks they complete. The database is designed to be used with PostgreSQL.
+This project contains the database model for the Guvi Zen Class. It includes tables for users, batches, problems, codekata, topics, attendance, tasks, and zen_class.
 
-#Database Schema
-#Students Table
-This table stores information about students enrolled in the Guvi Zen class.
+## Project Structure
 
-id: Unique identifier for each student (Primary Key, Auto Increment).
-name: Name of the student (Not Null).
-course: Course the student is enrolled in (Not Null).
-email: Email address of the student (Unique).
-created_at: Timestamp of when the student record was created.
-updated_at: Timestamp of the last update to the student record.
-Zen_Class Table
-This table stores information about each class session in the Guvi Zen class.
+The database is modeled using PostgreSQL. Below are the tables and their relationships:
 
-day: Day number of the class (Primary Key).
-topic: Topic covered in the class (Not Null).
-task: Task assigned during the class (Not Null).
-recorded_link: Link to the recorded class session (Not Null).
-mentor: Name of the mentor for the session (Default: 'vishnu').
-Tasks Table
-This table stores information about the tasks completed by students.
+### Tables
 
-student_id: Reference to the student's ID (Foreign Key to students.id).
-day: Reference to the day of the class (Foreign Key to zen_class.day).
-task_completion: Status of task completion (Not Null).
-DBML Representation
-The schema is defined using DBML for readability and ease of use.
+1. **users**
+   - `id` (Primary Key)
+   - `userName`: Name of the user.
+   - `userEmail`: Email of the user (unique).
+   - `userContactDetails`: Contact details of the user.
+   - `userBatchId`: Foreign key referencing `Batch.id`.
+   - `feesPaid`: Boolean indicating if the fees are paid.
+   - `placementEnabled`: Boolean indicating if placement is enabled.
+   - `userPrimaryLanguage`: Primary language of the user.
+   - `userSecondaryLanguage`: Secondary language of the user.
+   - `isCourseRestarted`: Boolean indicating if the course is restarted.
+   - `userRole`: Role of the user.
 
-#dbml
-Copy code
-Project GuviZenClass {
-    database_type: 'PostgreSQL'
-    Note: 'DB model for Guvi Zen class'
-}
+2. **Batch**
+   - `id` (Primary Key)
+   - `batchName`: Name of the batch.
+   - `batchStartTiming`: Start time of the batch.
+   - `batchEndTiming`: End time of the batch.
+   - `batchCourse`: Course name of the batch.
+   - `mentorId`: ID of the mentor.
+   - `batchCoordinatorId`: ID of the batch coordinator.
+   - `studentCoordinatorId`: ID of the student coordinator.
+   - `closureDate`: Closure date of the batch.
+   - `batchStrength`: Strength of the batch.
 
-Table students {
-    id integer [primary key, increment]
-    name varchar(255) [not null]
-    course varchar(20) [not null]
-    email varchar(100) [unique]
-    created_at datetime
-    updated_at datetime
-}
+3. **Problems**
+   - `id` (Primary Key)
+   - `problemName`: Name of the problem.
+   - `problemStatement`: Statement of the problem.
+   - `problemDifficultyLevel`: Difficulty level of the problem.
+   - `problemCompletionPoints`: Completion points of the problem.
 
-Table zen_class {
-    day integer [primary key]
-    topic varchar(255) [not null]
-    task varchar(255) [not null]
-    recorded_link varchar(255) [not null]
-    mentor varchar(255) [default: 'vishnu']
-}
+4. **Codekata**
+   - `id` (Primary Key)
+   - `problemId`: Foreign key referencing `Problems.id`.
+   - `userId`: Foreign key referencing `users.id`.
+   - `createdOn`: Timestamp when the codekata was created.
+   - `updatedOn`: Timestamp when the codekata was last updated.
+   - `progress`: Progress of the codekata.
+   - `earnedPoints`: Points earned from the codekata.
 
-Table tasks {
-    student_id integer [ref: > students.id]
-    day integer [ref: > zen_class.day]
-    task_completion varchar(255) [not null]
-}
-Getting Started
-To set up the database:
+5. **Topics**
+   - `id` (Primary Key)
+   - `topicName`: Name of the topic.
+   - `topicContent`: Content of the topic.
+   - `topicPreread`: Preread material for the topic.
+   - `topicDate`: Date of the topic.
+   - `topicActivity`: Activity associated with the topic.
+   - `topicTags`: Tags associated with the topic.
+   - `topicTimelineId`: Foreign key referencing `zen_class.day`.
+   - `topicType`: Type of the topic (Regular/Additional).
+   - `topicTaskId`: Foreign key referencing `Tasks.id`.
 
-Ensure you have PostgreSQL installed.
-Use a DBML tool to convert the DBML schema to SQL.
-Execute the generated SQL scripts to create the tables in your PostgreSQL database.
-Contributing
-Contributions are welcome! Please fork the repository and submit pull requests for any improvements or bug fixes.
+6. **Attendance**
+   - `id` (Primary Key)
+   - `batchId`: Foreign key referencing `Batch.id`.
+   - `userId`: Foreign key referencing `users.id`.
+   - `isPresent`: Boolean indicating if the user is present.
+   - `taskId`: Foreign key referencing `Tasks.id`.
+   - `date`: Date of the attendance.
 
-#License
-This project is licensed under the MIT License.
+7. **Tasks**
+   - `id` (Primary Key)
+   - `student_id`: Foreign key referencing `users.id`.
+   - `day`: Foreign key referencing `zen_class.day`.
+   - `task_completion`: Status of task completion.
+
+8. **zen_class**
+   - `day` (Primary Key)
+   - `topic`: Topic covered on the day.
+   - `task`: Task assigned on the day.
+   - `recorded_link`: Link to the recorded session.
+   - `mentor`: Mentor for the session.
+
+## How to Use
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/guvi-zen-class-db.git
+   cd guvi-zen-class-db
