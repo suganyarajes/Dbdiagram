@@ -86,5 +86,5 @@ The database is modeled using PostgreSQL. Below are the tables and their relatio
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/guvi-zen-class-db.git
+   git clone https://github.com/suganyarajes/Dbdiagram.git
    cd guvi-zen-class-db
