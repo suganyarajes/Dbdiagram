@@ -88,3 +88,93 @@ The database is modeled using PostgreSQL. Below are the tables and their relatio
    ```sh
    git clone https://github.com/suganyarajes/Dbdiagram.git
    cd guvi-zen-class-db
+   
+2.db-diagram Query:
+
+   Project GuviZenClass {
+    database_type: 'PostgreSQL'
+    Note: 'DB model for Guvi Zen class'
+}
+
+Table users {
+    id int [primary key, increment]
+    userName varchar(255) [not null]
+    userEmail varchar(100) [not null, unique]
+    userContactDetails varchar(255)
+    userBatchId int [ref: > Batch.id]
+    feesPaid boolean
+    placementEnabled boolean
+    userPrimaryLanguage varchar(50)
+    userSecondaryLanguage varchar(50)
+    isCourseRestarted boolean
+    userRole varchar(255)
+}
+
+Table Batch {
+    id int [primary key, increment]
+    batchName varchar(255) [not null]
+    batchStartTiming time [not null]
+    batchEndTiming time [not null]
+    batchCourse varchar(255) [not null]
+    mentorId int
+    batchCoordinatorId int
+    studentCoordinatorId int
+    closureDate date
+    batchStrength int
+}
+
+Table Problems {
+    id int [primary key, increment]
+    problemName varchar(255) [not null]
+    problemStatement text [not null]
+    problemDifficultyLevel varchar(50) [not null]
+    problemCompletionPoints int [not null]
+}
+
+Table Codekata {
+    id int [primary key, increment]
+    problemId int [ref: > Problems.id]
+    userId int [ref: > users.id]
+    createdOn timestamp [not null]
+    updatedOn timestamp [not null]
+    progress varchar(50) [not null]
+    earnedPoints int [not null]
+}
+
+Table Topics {
+    id int [primary key, increment]
+    topicName varchar(255) [not null]
+    topicContent text
+    topicPreread text
+    topicDate timestamp [not null]
+    topicActivity text
+    topicTags varchar(255)
+    topicTimelineId int [ref: > zen_class.day]
+    topicType varchar(50) [note: 'Regular or Additional']
+    topicTaskId int [ref: > Tasks.id]
+}
+
+Table Attendance {
+    id int [primary key, increment]
+    batchId int [ref: > Batch.id]
+    userId int [ref: > users.id]
+    isPresent boolean
+    taskId int [ref: > Tasks.id]
+    date timestamp [not null]
+}
+
+Table Tasks {
+    id int [primary key, increment]
+    student_id int [ref: > users.id]
+    day int [ref: > zen_class.day]
+    task_completion varchar(255) [not null]
+}
+
+Table zen_class {
+    day int [primary key]
+    topic varchar(255) [not null]
+    task varchar(255) [not null]
+    recorded_link varchar(255) [not null]
+    mentor varchar(255) [default: 'vishnu']
+}
+
